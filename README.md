@@ -6,6 +6,12 @@ Roopra, A. 2020
 PLoS Computational Biology
 
 
+
+MAGIC requires Matrix files that can be downloaded from:
+Download Matrices.zip and unpack.
+Place unzipped folder in the same directory/folder as MAGIC.py prior to running MAGIC.py
+
+
 Implementation of MAGIC.
 A tab delimited text file is requested by MAGIC (lists file).  The first column contains a list of all genes expressed in the experiment (background list).  Any number of other columns are then added containing query lists.  For example, a query list may be all genes that go up under some criterion and another may be all genes that go down.  The first row is the header and must have unique names for each column.  MAGIC then requests which Matrix to use.
 
