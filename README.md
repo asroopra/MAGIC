@@ -8,6 +8,8 @@ PLoS Computational Biology
 
 
 MAGIC requires Matrix files that can be downloaded from:
+https://go.wisc.edu/magic
+
 Download Matrices.zip and unpack.
 Place unzipped folder in the same directory/folder as MAGIC.py prior to running MAGIC.py
 
