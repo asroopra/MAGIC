@@ -1,22 +1,6 @@
 #!/usr/bin/env python3
 
 #####################################################################################################
-# Version notes
-# 1-tailed KS test using Hodges eqn
-# Uses 5 percentile enrichment
-# Uses c= uq/ub for coefficient
-# lollipop markers for 5th percentile genes
-# uses 'Target' rather than 'Driver' terminology
-# saves Factor data for all non-triaged Factors
-# uses .mtx files for matrix
-
-# need to:
-# fix zero errors for lists with no hits
-# replace windows, osx file handler modules with speicifed divider
-# make magicPathFinder_NEW windows compatible
-
-#####################################################################################################
-
 
 import os
 import sys
