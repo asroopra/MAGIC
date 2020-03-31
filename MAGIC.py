@@ -37,7 +37,7 @@ def Universal_FileHandler(operating_system, inputPath):
 		
 	timestamp = str(int(time.time()))[-4:]
 
-	home = inputPath[:inPath.rfind(separator)+1]
+	home = inputPath[:inputPath.rfind(separator)+1]
 
 	folderPaths         = dict()
 	folderPaths['home'] = home
