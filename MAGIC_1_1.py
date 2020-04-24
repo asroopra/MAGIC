@@ -9,9 +9,6 @@
 #  - Handles cases where a factor has 2 or more entries where the best score
 #      is associated with FDR>0.1 yet the lower score has FDR < 0.1....
 #      keeps significant expt in summary even if score is lower than the non-sig expt for a Factor
-
-
-
 #####################################################################################################
 
 
