@@ -1,5 +1,8 @@
 The manuscript accompanying this script is: MAGIC: A tool for predicting transcription factors and cofactors driving gene sets using ENCODE data. Roopra, A. 2020 PLoS Computational Biology
 
+Transcriptomic profiling is an immensely powerful hypothesis generating tool. However, accurately predicting the transcription factors (TFs) and cofactors that drive transcriptomic differences between samples is challenging.  A number of algorithms draw on ChIP-seq tracks to define TFs and cofactors behind gene changes.  These approaches assign TFs and cofactors to genes via a binary designation of ‘target’, or ‘non-target’ followed by Fisher Exact Tests to assess enrichment of TFs and cofactors.  MAGIC uses ENCODE ChIP-seq data to look for statistical enrichment of TFs and cofactors in gene bodies and flanking regions in gene lists without an a priori binary classification of genes as targets or non-targets.  When compared to other TF mining resources, MAGIC displayed favourable performance in predicting TFs and cofactors that drive gene changes 
+
+
 MAGIC requires Matrix files that can be downloaded from: https://go.wisc.edu/magic
 Download Matrices.zip and unpack. Place unzipped folder in the same directory/folder as MAGIC.py prior to running MAGIC.py
 
@@ -47,7 +50,7 @@ MAGIC analyzes each query list and generate a series of output files and sub-dir
             Benjamini Hochberg corrected p value (Pcorr)
 
 	Score
-		log(Pcorr)x r
+		-log(Pcorr)x r
 
 - Summary.xls 
 	File with the same layout as above contains the best scoring experiment for each Factor in ENCODE  – each Factor appears once in this file.
