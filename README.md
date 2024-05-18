@@ -7,41 +7,49 @@ PLoS Computational Biology
 
 
 
-MAGIC requires Matrix files that can be downloaded from:
+MAGIC_2_ requires Matrix files that can be downloaded from:
 https://go.wisc.edu/magic
 
 Download Matrices.zip and unpack.
-Place unzipped folder in the same directory/folder as MAGIC.py prior to running MAGIC.py
+Place unzipped folder in the same directory/folder as MAGIC.py prior to running MAGIC_2_.py
 
 
-Implementation of MAGIC.
-A tab delimited text file is requested by MAGIC (lists file).  The first column contains a list of all genes expressed in the experiment (background list).  Any number of other columns are then added containing query lists.  For example, a query list may be all genes that go up under some criterion and another may be all genes that go down.  The first row is the header and must have unique names for each column.  MAGIC then requests which Matrix to use.
+Implementation of MAGIC_2.
+MAGIC2 accepts command line inputs.  If none are provided, a file path to the lists file will be requested by the script upon running.
+Command line options are:
 
-MAGIC analyzes each query list and generate a series of output files and sub-directories in the directory containing the original lists file. An ‘Accepted_Lists.txt’ file is generated which is the original input file filtered for genes in the Matrix.  A Platform_Matrix.txt file is the matrix file filtered for genes in the the background list.  A series of directories are generated named after each query list in the lists file.  Each directory contains sub-directories and files for the stand-alone analysis of that query list. A Query_List_Details.xls file contains statistical information for all non-triaged Factors. All Factors associated with Pcorr < 10% are highlighted in bold red. Data reported in Query_List_Details.xls are:
+-f	File path to lists file [REQUIRED].
+-p:	Maximum acceptable adjusted p value for figure generation. Default=0.25  [OPTIONAL].
+-t:	Minimum number of target genes for Factor to be called. Default=10 [OPTIONAL].
+-m:	Path to matrix file. Default = /Matrices/1Kb_gene.pkl.gz [OPTIONAL].
+-g:	Keep General Transcription Factors and RNApol in analysis (y/n).  Default = y [OPTIONAL].  
+-z:	Keep zero ChiP values (y/n). Default = n [OPTIONAL]
 
-Factor			Name of Factor
-Description		The ENCODE cell line, tissue or experiment description
-Critical ChIP: 		argDsup i.e. ChIP value at dsup (This value is used to determine target genes in the list)
-Obs Tail Mean: 	Average of the 95th percentile ChIP values (n values) in the query list.
-Exp Tail Mean: 	Average of the top n ChIP values in the backgound.
-Tail Enrichment: 	Ratio of the Obs and Exp Tail Means (r)
-Raw P:  		Kolmogorov-Smirnov p value
-Corrected P:		Benjamini Hochberg corrected p value (Pcorr)
-Score: 			Score (-log(Pcorr)x r)
+NOTE on z option:  Keeping zero Chip signals will recreate MAGIC outputs very similar to MAGIC outlined in Roopra,2020.  Eliminating zero chip values will place more weight on Factors with higher ChIP values and de-emphasize those Factors that may regulate genes via moderate/lower binding affinities.  This tends to produce outputs more like - but not the same as - tests based on Fisher Exact Tests with gene lists and gene sets such as EnrichR.
 
-Where ENCODE contains multiple Chip-seq tracks for a Factor, the best scoring is also reported in a Summary.xls file with the same layout as above – each Factor appears once in this file.  A query_list_summary.pdf contains a bar graph of Factors and Scores with Pcorr <10%.
+A tab delimited text file is requested by MAGIC (lists file).  The first column contains a list of all genes expressed in the experiment (background list).  Any number of other columns are then added containing query lists.  For example, a query list may be all genes that go up under some criterion and another may be all genes that go down.  The first row is the header and must have unique names for each column.  These names will be used to generate file and folder names so do not use special characters, spaces, period etc in column names.
 
-Query_list_Drivers.gmx is a tab delimited file in the GMX format utilized by GSEA.  The first column contains the background list of genes.  The second contains the query list.  Subsequent columns contain all target genes of each Factor.  Target genes are defined as those genes in the query list whose ChIP signal is greater than the Critical ChIP (argDsup) i.e. the ChIP at which there is the maximal difference between the population and query cumulative.
+MAGIC analyzes each query list and generate a series of output files and sub-directories. A series of directories are generated named after each query list in the lists file.  Each directory contains sub-directories and files for the stand-alone analysis of that query list. A Query_List_Details.xlsx file contains statistical information for all non-triaged ENCODE experiments. Data reported in Query_List_Details.xls are:
 
-A sub-directory called ‘CDFs’ contains graphical displays of the analysis for all non-triaged Factors.  The naming format is ‘rank (integer)’_’factor (string)’.pdf (e.g. 1_NRSF.pdf; rank = 1, factor = NRSF) (S1 Fig) where ranking is determined by Score.  Two cumulative functions are displayed: the black curve is the fractional cumulative of all genes in the background list against ChIP values, red is the same for query genes.  A blue vertical line denotes the ChIP value at dsup i.e. argDsup.  Red ticks along the x-axis represent each gene in the query list and black ticks are all genes in the background.  Red ticks with circles (‘lollipops’)  are the n=0.05X best chiped genes.  Black lollipops are genes in the background list with the n highest ChIP values.
+Experiment: The ENCODE experiment.  format = cell-line_experiment-ID:Factor e.g K562_ENCFF558VPP:REST
+D:					Kolmogorov Smirnov statistic
+argD:				Argument (ChipValue) of D
+p:					Kolmogorov Smirnov p value
+Score:			-log(p)xD
+TF:					Factor name 
 
-A second sub-directory called ‘Auxiliary_Files’ is populated with data behind the summary files.  The ‘query_list_raw_results.CSV’ file contains the same columns as the Query_list_Summary.xls file but has raw data for all factors including those that were triaged and not considered for further statistical analysis. It also contains the Kolmogorov-Smirnov D statistic for each factor.  D statistics with a negative sign denote D values for triaged factors; the negative sign is used by the algorithm for triage sorting.  
+A summary file contains the best scoring Experiment for each Factor.  Each Factor appears once in this file.  The format is:
+TF:					Factor Name
+Experiment: The best scoring ENCODE experiment for a Factor.  format = cell-line_experiment-ID:Factor e.g K562_ENCFF558VPP:REST
+D:					Kolmogorov Smirnov statistic
+argD:				Argument (ChipValue) of D
+p:					Kolmogorov Smirnov p value
+Score:			-log(p)xD
+padj:				Benjamini-Hochberg corrected p value 
 
-Query_list_Sub_Matrix.txt is the MAGIC Matrix filtered for genes in the query list.  
+Query_list_Drivers.gmx is a tab delimited file in the GMX format utilized by GSEA.  The first column contains the background list of genes.  Subsequent columns contain all target genes of each Factor.  Target genes are defined as those genes in the query list whose ChIP signal is greater than the argD i.e. the ChIP at which there is the maximal difference between the population and query cumulative.
 
-Triaged_Factors.txt is a list of factors that were not considered (triaged).
-
-Triaged_Genes.txt contains all genes in the query that were not in the MAGIC Matrix and therefore eliminated from analysis.
-
-A sub-directory named ‘Target_Data’ contains comma separated text files for each Factor with Pcorr < 10%.  Each file contains a list of target genes for that Factor and associated MAGIC Matrix ChIP value.
+An Auxiliary_Files directory contains 2 sub directories:
+'Distributions' contains html files showing the PDFs and CDFs for ChIP values in the query and master list for each gene in the ENCODE experiment
+'Target_Data_' contains comma separated text files for each Factor with padj less than user defined or default cutoff.  Each file contains a list of target genes for that Factor and associated MAGIC Matrix ChIP value.
 
